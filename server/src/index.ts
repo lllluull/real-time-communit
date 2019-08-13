@@ -1,10 +1,8 @@
-import App from "./app"
-import LoginController from "./controller/login"
-const app = new App(
-  [
-    new LoginController(),
-  ],
-  5000,
-);
+import app from './app'
+import login from './controller/login'
 
-app.listen()
+const App = new app (
+    [new login()], 5000
+)
+
+App.listen()
