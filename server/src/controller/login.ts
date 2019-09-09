@@ -1,4 +1,7 @@
 import * as express from 'express';
+import jwt from 'jsonwebtoken'
+
+const tokenKey = "jwtKey"
 
 interface ILogin {
     name: string,
@@ -31,7 +34,8 @@ class LoginController {
   public LoginPost = (request: express.Request, response: express.Response) => {
     const { user, password } = request.body
     if (user === "hupengpeng" && password === "123456" ) {
-        response.send("登录成功")
+      const token = jwt.sign({ user }, tokenKey)
+      response.send({code: 200, data: {token}})
     } else {
         response.send("登录失败")
     }

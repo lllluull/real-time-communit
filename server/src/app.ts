@@ -44,7 +44,6 @@ class App {
 
     this.wsServer.on('request', (request) => {
       const userID = getUniqueID();
-      console.log((new Date()) + ' Recieved a new connection from origin ' + request.origin + '.');
       // You can rewrite this part of the code to accept only the requests from allowed origin
       const connection = request.accept(null, request.origin);
       const sendMessage = (json: string) => {
@@ -54,23 +53,17 @@ class App {
         });
       }
       connection.on('message', (message) => {
-          if (message.type === 'utf8') {
-            const dataFromClient = JSON.parse(message.utf8Data);
-            const json = { type: dataFromClient.type };
-            console.log(json)
-            sendMessage(JSON.stringify(json));
-          }
+        if (message.type === 'utf8') {
+          sendMessage(JSON.stringify(message.utf8Data));
+        }
         });
       clients[userID] = connection;
-      console.log('connected: ' + userID + ' in ' + Object.getOwnPropertyNames(clients))
     });
   }
-
   private initializeMiddlewares() {
     this.app.use(bodyParser.json());
     this.app.use(cors());
   }
-
   private initializeControllers(controllers: IController[]) {
     controllers.forEach((controller) => {
       this.app.use("/", controller.router);
